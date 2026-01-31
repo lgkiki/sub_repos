@@ -1,5 +1,31 @@
 let currentInput = '';
 let operatorAdded = false;
+let currentLanguage = 'zh';
+
+const translations = {
+    zh: {
+        title: 'Rust计算器',
+        placeholder: '输入表达式 (例如: 5 + 3)',
+        clear: 'C',
+        result: '结果: ',
+        calculating: '计算中...',
+        pleaseEnter: '请输入表达式',
+        error: '错误: ',
+        connectionError: '连接错误: 请确保后端服务器正在运行',
+        calculateSuccess: '计算成功'
+    },
+    en: {
+        title: 'Rust Calculator',
+        placeholder: 'Enter expression (e.g: 5 + 3)',
+        clear: 'Clear',
+        result: 'Result: ',
+        calculating: 'Calculating...',
+        pleaseEnter: 'Please enter an expression',
+        error: 'Error: ',
+        connectionError: 'Connection error: Please ensure the backend server is running',
+        calculateSuccess: 'Calculation successful'
+    }
+};
 
 function appendToDisplay(value) {
     const display = document.getElementById('expression');
@@ -35,12 +61,12 @@ function clearDisplay() {
 
 async function calculate() {
     if (!currentInput.trim()) {
-        showStatus('请输入表达式', 'error');
+        showStatus(translations[currentLanguage].pleaseEnter, 'error');
         return;
     }
 
     const expression = currentInput.trim();
-    showStatus('计算中...', 'info');
+    showStatus(translations[currentLanguage].calculating, 'info');
 
     try {
         const response = await fetch('http://localhost:3030/calculate', {
@@ -54,19 +80,45 @@ async function calculate() {
         const data = await response.json();
 
         if (data.error) {
-            showStatus('错误: ' + data.error, 'error');
+            showStatus(translations[currentLanguage].error + data.error, 'error');
             document.getElementById('result').textContent = '';
         } else {
-            document.getElementById('result').textContent = '结果: ' + data.result;
-            showStatus('计算成功', 'success');
+            document.getElementById('result').textContent = translations[currentLanguage].result + data.result;
+            showStatus(translations[currentLanguage].calculateSuccess, 'success');
             currentInput = data.result.toString();
             document.getElementById('expression').value = currentInput;
             operatorAdded = false;
         }
     } catch (error) {
-        showStatus('连接错误: 请确保后端服务器正在运行', 'error');
+        showStatus(translations[currentLanguage].connectionError, 'error');
         console.error('Error:', error);
     }
+}
+
+function toggleLanguage() {
+    currentLanguage = currentLanguage === 'zh' ? 'en' : 'zh';
+    updateLanguage();
+    
+    const langButton = document.querySelector('.lang-switch');
+    langButton.textContent = currentLanguage === 'zh' ? 'EN' : '中';
+}
+
+function updateLanguage() {
+    const t = translations[currentLanguage];
+    
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (t[key]) {
+            element.textContent = t[key];
+        }
+    });
+    
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (t[key]) {
+            element.placeholder = t[key];
+        }
+    });
 }
 
 function showStatus(message, type) {
@@ -100,4 +152,8 @@ document.addEventListener('keydown', function(event) {
             operatorAdded = false;
         }
     }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateLanguage();
 });

@@ -23,12 +23,40 @@ body {
     width: 100%;
 }
 
-h1 {
-    text-align: center;
-    color: #333;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 25px;
+}
+
+.lang-switch {
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 40px;
+}
+
+.lang-switch:hover {
+    background: #5a6fd8;
+    transform: translateY(-1px);
+}
+
+.lang-switch:active {
+    transform: translateY(0);
+}
+
+h1 {
+    color: #333;
     font-size: 28px;
     font-weight: 600;
+    margin: 0;
 }
 
 .display {
@@ -168,6 +196,15 @@ button {
     .calculator {
         margin: 20px;
         padding: 20px;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .lang-switch {
+        align-self: flex-end;
     }
     
     .buttons {

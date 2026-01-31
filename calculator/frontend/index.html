@@ -8,9 +8,12 @@
 </head>
 <body>
     <div class="calculator">
-        <h1>Rust计算器</h1>
+        <div class="header">
+            <h1 data-i18n="title">Rust计算器</h1>
+            <button class="lang-switch" onclick="toggleLanguage()">EN</button>
+        </div>
         <div class="display">
-            <input type="text" id="expression" placeholder="输入表达式 (例如: 5 + 3)" readonly>
+            <input type="text" id="expression" data-i18n-placeholder="placeholder" placeholder="输入表达式 (例如: 5 + 3)" readonly>
         </div>
         <div class="buttons">
             <div class="numbers">
@@ -25,7 +28,7 @@
                 <button onclick="appendToDisplay('3')">3</button>
                 <button onclick="appendToDisplay('0')">0</button>
                 <button onclick="appendToDisplay('.')">.</button>
-                <button onclick="clearDisplay()">C</button>
+                <button onclick="clearDisplay()" data-i18n="clear">C</button>
             </div>
             <div class="operators">
                 <button onclick="appendToDisplay('+')">+</button>
