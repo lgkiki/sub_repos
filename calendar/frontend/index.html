@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农历日历</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="calendar-container">
+        <div class="header">
+            <h1>农历日历</h1>
+            <button class="lang-switch" onclick="toggleLanguage()">EN</button>
+        </div>
+        
+        <div class="calendar-info">
+            <div class="solar-info">
+                <span id="solar-year">2024</span>年<span id="solar-month">1</span>月
+            </div>
+            <div class="lunar-info">
+                <span id="lunar-year"></span> <span id="zodiac"></span>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button onclick="changeMonth(-1)">← 上月</button>
+            <button onclick="goToToday()">今天</button>
+            <button onclick="changeMonth(1)">下月 →</button>
+        </div>
+        
+        <div class="weekdays">
+            <div class="weekday">日</div>
+            <div class="weekday">一</div>
+            <div class="weekday">二</div>
+            <div class="weekday">三</div>
+            <div class="weekday">四</div>
+            <div class="weekday">五</div>
+            <div class="weekday">六</div>
+        </div>
+        
+        <div class="calendar-grid" id="calendar-grid">
+            <!-- 日历格子将由 JavaScript 动态生成 -->
+        </div>
+        
+        <div class="status" id="status"></div>
+        
+        <div class="detail-panel" id="detail-panel" style="display: none;">
+            <h3>日期详情</h3>
+            <div class="detail-content">
+                <p>公历: <span id="detail-solar"></span></p>
+                <p>农历: <span id="detail-lunar"></span></p>
+                <p>干支: <span id="detail-stem-branch"></span></p>
+                <p>生肖: <span id="detail-zodiac"></span></p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
