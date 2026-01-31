@@ -197,29 +197,29 @@ button {
         margin: 20px;
         padding: 20px;
     }
-    
+
     .header {
         flex-direction: column;
         gap: 15px;
     }
-    
+
     .lang-switch {
         align-self: flex-end;
     }
-    
+
     .buttons {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .numbers, .operators {
         width: 100%;
     }
-    
+
     .operators {
         flex-direction: row;
     }
-    
+
     button {
         font-size: 14px;
         padding: 12px;

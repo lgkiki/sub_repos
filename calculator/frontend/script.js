@@ -29,7 +29,7 @@ const translations = {
 
 function appendToDisplay(value) {
     const display = document.getElementById('expression');
-    
+
     if (['+', '-', '*', '/'].includes(value)) {
         if (operatorAdded) {
             return;
@@ -47,7 +47,7 @@ function appendToDisplay(value) {
         currentInput += value;
         operatorAdded = false;
     }
-    
+
     display.value = currentInput;
 }
 
@@ -72,7 +72,7 @@ async function calculate() {
         const response = await fetch('http://localhost:3030/calculate', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({ expression: expression })
         });
@@ -98,21 +98,21 @@ async function calculate() {
 function toggleLanguage() {
     currentLanguage = currentLanguage === 'zh' ? 'en' : 'zh';
     updateLanguage();
-    
+
     const langButton = document.querySelector('.lang-switch');
     langButton.textContent = currentLanguage === 'zh' ? 'EN' : '中';
 }
 
 function updateLanguage() {
     const t = translations[currentLanguage];
-    
+
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
         if (t[key]) {
             element.textContent = t[key];
         }
     });
-    
+
     document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
         const key = element.getAttribute('data-i18n-placeholder');
         if (t[key]) {
@@ -125,7 +125,7 @@ function showStatus(message, type) {
     const status = document.getElementById('status');
     status.textContent = message;
     status.className = 'status ' + type;
-    
+
     if (type === 'success') {
         setTimeout(() => {
             status.textContent = '';
