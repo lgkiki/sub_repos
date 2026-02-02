@@ -3,144 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>电子衣柜</title>
+    <title>电子衣柜 - 衣尽其用，精简生活</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>电子衣柜</h1>
-            <button id="add-clothing-btn" class="btn-primary">添加衣物</button>
+    <div class="app-container">
+        <!-- 顶部导航 -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>电子衣柜</h1>
+                    <span class="tagline">衣尽其用，精简生活</span>
+                </div>
+                <nav class="nav-menu">
+                    <button class="nav-item active" data-view="wardrobe">
+                        <span class="icon">👔</span>
+                        <span class="text">衣橱</span>
+                    </button>
+                    <button class="nav-item" data-view="outfits">
+                        <span class="icon">👗</span>
+                        <span class="text">穿搭</span>
+                    </button>
+                    <button class="nav-item" data-view="calendar">
+                        <span class="icon">📅</span>
+                        <span class="text">日历</span>
+                    </button>
+                    <button class="nav-item" data-view="stats">
+                        <span class="icon">📊</span>
+                        <span class="text">统计</span>
+                    </button>
+                </nav>
+                <button class="add-btn" id="add-clothing-btn">
+                    <span class="plus">+</span>
+                </button>
+            </div>
         </header>
 
-        <main>
-            <div class="filters">
-                <div class="filter-group">
-                    <label>按季节筛选：</label>
-                    <select id="season-filter">
-                        <option value="">全部</option>
-                        <option value="spring-autumn">春秋装</option>
-                        <option value="summer">夏装</option>
-                        <option value="winter">冬装</option>
-                    </select>
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 筛选栏 -->
+            <div class="filter-section">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">全部</button>
+                    <button class="filter-tab" data-filter="top">上衣</button>
+                    <button class="filter-tab" data-filter="bottom">下装</button>
+                    <button class="filter-tab" data-filter="dress">连衣裙</button>
+                    <button class="filter-tab" data-filter="outerwear">外套</button>
                 </div>
-                
-                <div class="filter-group">
-                    <label>按类型筛选：</label>
-                    <select id="type-filter">
-                        <option value="">全部</option>
-                        <option value="top">上衣</option>
-                        <option value="bottom">裤子</option>
-                        <option value="dress">裙子</option>
-                        <option value="outerwear">外套</option>
-                    </select>
+                <div class="season-filters">
+                    <button class="season-btn active" data-season="all">全季</button>
+                    <button class="season-btn" data-season="spring-autumn">春秋</button>
+                    <button class="season-btn" data-season="summer">夏季</button>
+                    <button class="season-btn" data-season="winter">冬季</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" placeholder="搜索衣物..." id="search-input">
+                    <button class="search-btn">🔍</button>
                 </div>
             </div>
 
-            <div id="clothes-grid" class="clothes-grid">
+            <!-- 统计信息栏 -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-number" id="total-count">0</span>
+                    <span class="stat-label">总计</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="this-month-count">0</span>
+                    <span class="stat-label">本月新增</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="this-wear-count">0</span>
+                    <span class="stat-label">本月穿搭</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="total-value">¥0</span>
+                    <span class="stat-label">总价值</span>
+                </div>
+            </div>
+
+            <!-- 衣物网格 -->
+            <div class="clothes-grid" id="clothes-grid">
                 <!-- 衣物卡片将在这里动态生成 -->
+            </div>
+
+            <!-- 空状态 -->
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <div class="empty-icon">👗</div>
+                <h3>开始添加你的第一件衣物</h3>
+                <p>记录每一件衣物，让衣橱井井有条</p>
+                <button class="btn-primary" onclick="document.getElementById('add-clothing-btn').click()">添加衣物</button>
             </div>
         </main>
     </div>
 
     <!-- 添加衣物模态框 -->
-    <div id="add-clothing-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>添加新衣物</h2>
+    <div class="modal-overlay" id="add-modal-overlay"></div>
+    <div class="modal" id="add-clothing-modal">
+        <div class="modal-header">
+            <h2>添加衣物</h2>
+            <button class="close-btn" id="close-add-modal">×</button>
+        </div>
+        <div class="modal-body">
             <form id="add-clothing-form">
-                <div class="form-group">
-                    <label for="label">标签：</label>
-                    <input type="text" id="label" name="label" required>
+                <div class="form-section">
+                    <h3>基本信息</h3>
+                    <div class="form-row">
+                        <div class="form-group full">
+                            <label>名称</label>
+                            <input type="text" id="label" name="label" placeholder="给衣物起个名字" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>类型</label>
+                            <select id="clothing-type" name="clothing_type" required>
+                                <option value="top">上衣</option>
+                                <option value="bottom">下装</option>
+                                <option value="dress">连衣裙</option>
+                                <option value="outerwear">外套</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>季节</label>
+                            <select id="season" name="season" required>
+                                <option value="spring-autumn">春秋</option>
+                                <option value="summer">夏季</option>
+                                <option value="winter">冬季</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="clothing-type">类型：</label>
-                    <select id="clothing-type" name="clothing_type" required>
-                        <option value="top">上衣</option>
-                        <option value="bottom">裤子</option>
-                        <option value="dress">裙子</option>
-                        <option value="outerwear">外套</option>
-                    </select>
+
+                <div class="form-section">
+                    <h3>详细信息</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>购买价格</label>
+                            <input type="number" id="price" name="price" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>购买日期</label>
+                            <input type="date" id="purchase-date" name="purchase_date">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>品牌</label>
+                            <input type="text" id="brand" name="brand" placeholder="品牌名称">
+                        </div>
+                        <div class="form-group">
+                            <label>颜色</label>
+                            <input type="text" id="color" name="color" placeholder="主要颜色">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full">
+                            <label>标签</label>
+                            <input type="text" id="tags" name="tags" placeholder="用逗号分隔，如：工作,休闲,正式">
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="season">季节：</label>
-                    <select id="season" name="season" required>
-                        <option value="spring-autumn">春秋装</option>
-                        <option value="summer">夏装</option>
-                        <option value="winter">冬装</option>
-                    </select>
+
+                <div class="form-section">
+                    <h3>图片</h3>
+                    <div class="image-upload">
+                        <div class="upload-area" id="upload-area">
+                            <div class="upload-icon">📷</div>
+                            <p>点击或拖拽上传图片</p>
+                            <input type="url" id="image-url" name="image_url" placeholder="或输入图片URL">
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="wear-count">穿着次数：</label>
-                    <input type="number" id="wear-count" name="wear_count" min="0" value="0">
-                </div>
-                
-                <div class="form-group">
-                    <label for="purchase-date">购买时间：</label>
-                    <input type="datetime-local" id="purchase-date" name="purchase_date">
-                </div>
-                
-                <div class="form-group">
-                    <label for="image-url">图片URL：</label>
-                    <input type="url" id="image-url" name="image_url" placeholder="可选">
-                </div>
-                
+
                 <div class="form-actions">
-                    <button type="submit" class="btn-primary">添加</button>
-                    <button type="button" class="btn-secondary" id="cancel-btn">取消</button>
+                    <button type="button" class="btn-secondary" id="cancel-add-btn">取消</button>
+                    <button type="submit" class="btn-primary">添加衣物</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- 编辑衣物模态框 -->
-    <div id="edit-clothing-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
+    <div class="modal-overlay" id="edit-modal-overlay"></div>
+    <div class="modal" id="edit-clothing-modal">
+        <div class="modal-header">
             <h2>编辑衣物</h2>
+            <button class="close-btn" id="close-edit-modal">×</button>
+        </div>
+        <div class="modal-body">
             <form id="edit-clothing-form">
                 <input type="hidden" id="edit-id" name="id">
                 
-                <div class="form-group">
-                    <label for="edit-label">标签：</label>
-                    <input type="text" id="edit-label" name="label" required>
+                <div class="form-section">
+                    <h3>基本信息</h3>
+                    <div class="form-row">
+                        <div class="form-group full">
+                            <label>名称</label>
+                            <input type="text" id="edit-label" name="label" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>类型</label>
+                            <select id="edit-clothing-type" name="clothing_type" required>
+                                <option value="top">上衣</option>
+                                <option value="bottom">下装</option>
+                                <option value="dress">连衣裙</option>
+                                <option value="outerwear">外套</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>季节</label>
+                            <select id="edit-season" name="season" required>
+                                <option value="spring-autumn">春秋</option>
+                                <option value="summer">夏季</option>
+                                <option value="winter">冬季</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="edit-clothing-type">类型：</label>
-                    <select id="edit-clothing-type" name="clothing_type" required>
-                        <option value="top">上衣</option>
-                        <option value="bottom">裤子</option>
-                        <option value="dress">裙子</option>
-                        <option value="outerwear">外套</option>
-                    </select>
+
+                <div class="form-section">
+                    <h3>穿着记录</h3>
+                    <div class="wear-count-section">
+                        <div class="wear-counter">
+                            <span class="wear-label">累计穿着次数</span>
+                            <div class="wear-controls">
+                                <button type="button" class="wear-btn" id="decrement-wear">-</button>
+                                <span class="wear-number" id="edit-wear-count">0</span>
+                                <button type="button" class="wear-btn" id="increment-wear">+</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="edit-season">季节：</label>
-                    <select id="edit-season" name="season" required>
-                        <option value="spring-autumn">春秋装</option>
-                        <option value="summer">夏装</option>
-                        <option value="winter">冬装</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="edit-wear-count">穿着次数：</label>
-                    <input type="number" id="edit-wear-count" name="wear_count" min="0">
-                </div>
-                
-                <div class="form-group">
-                    <label for="edit-image-url">图片URL：</label>
-                    <input type="url" id="edit-image-url" name="image_url" placeholder="可选">
-                </div>
-                
+
                 <div class="form-actions">
-                    <button type="submit" class="btn-primary">保存</button>
-                    <button type="button" class="btn-secondary" id="edit-cancel-btn">取消</button>
+                    <button type="button" class="btn-danger" id="delete-edit-btn">删除衣物</button>
+                    <button type="button" class="btn-secondary" id="cancel-edit-btn">取消</button>
+                    <button type="submit" class="btn-primary">保存修改</button>
                 </div>
             </form>
         </div>
