@@ -1,4 +1,4 @@
-const API_BASE = '/api';
+const API_BASE = 'http://192.168.3.176:3030/api';
 
 let currentClothes = [];
 
